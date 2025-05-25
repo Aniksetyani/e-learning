@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Belajar Bahasa Arab - E-Learning</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri&family=Poppins:wght@400;600&display=swap');
+
+  :root {
+    --color-bg-start: #1f1c2c;
+    --color-bg-end: #928dab;
+    --color-primary: #ff6f91;
+    --color-secondary: #845ec2;
+    --color-accent: #ffc75f;
+    --color-text-light: #f8f8f8;
+    --color-text-dark: #2e2e2e;
+    --color-card-bg: rgba(255, 255, 255, 0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
+    color: var(--color-text-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    text-shadow: 0 0 10px var(--color-accent);
+  }
+
+  main {
+    flex: 1;
+    max-width: 960px;
+    margin: 2rem auto 3rem;
+    background: transparent;
+    padding: 0 1rem;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  nav button {
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+    padding: 0.5rem 1.2rem;
+    border-bottom: 3px solid transparent;
+    transition: 
+      border-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.2s ease;
+  }
+
+  nav button:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+
+  nav button.active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  section.lesson {
+    display: none;
+    background: var(--color-card-bg);
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 30px 3px rgba(255, 111, 145, 0.3);
+    backdrop-filter: blur(8px);
+  }
+
+  section.lesson.active {
+    display: block;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(30px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  .arabic-letter {
+    font-family: 'Amiri', serif;
+    font-size: 6rem;
+    text-align: center;
+    color: var(--color-primary);
+    text-shadow: 0 0 10px var(--color-primary);
+  }
+
+  .letter-name {
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    text-align: center;
+    margin: 0.4rem 0 2rem;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+
+  .letter-card {
+    background: rgba(255 255 255 / 0.12);
+    border-radius: 14px;
+    padding: 2rem 1rem 1.5rem;
+    box-shadow: 0 8px 20px rgba(255, 111, 145, 0.25);
+    width: 150px;
+    margin: 0.8rem;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .letter-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(255, 111, 145, 0.5);
+  }
+
+  .alphabets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 14px;
+  }
+
+  /* Vocabulary styling */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+    gap: 1.2rem;
+    justify-items: center;
+  }
+
+  .vocab-card {
+    background: rgba(255 255 255 / 0.15);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(132, 94, 194, 0.25);
+    padding: 1.2rem 1rem;
+    width: 140px;
+    cursor: default;
+    user-select: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .vocab-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 14px 35px rgba(255, 199, 95, 0.75);
+    background: rgba(255 255 255 / 0.3);
+  }
+
+  .vocab-arabic {
+    font-family: 'Amiri', serif;
+    font-size: 2.8rem;
+    color: var(--color-primary);
+    text-align: center;
+    text-shadow: 0 0 5px var(--color-primary);
+    margin-bottom: 0.3rem;
+    user-select: text;
+  }
+
+  .vocab-translation {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--color-accent);
+    text-align: center;
+    user-select: text;
+  }
+
+  /* Quiz */
+  .quiz-question {
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--color-accent);
+    user-select: none;
+  }
+
+  .quiz-options {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+    gap: 12px;
+  }
+
+  .quiz-options li {
+    background: var(--color-secondary);
+    color: var(--color-text-light);
+    padding: 0.7rem 1.1rem;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(132, 94, 194, 0.5);
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+    user-select: none;
+  }
+
+  .quiz-options li:hover {
+    background: var(--color-primary);
+    box-shadow: 0 9px 22px rgba(255, 111, 145, 0.8);
+    transform: translateY(-3px);
+  }
+
+  .quiz-options li.correct {
+    background: #4CAF50 !important;
+    box-shadow: 0 9px 25px #4caf50cc !important;
+    cursor: default;
+    transform: none !important;
+  }
+
+  .quiz-options li.incorrect {
+    background: #E53935 !important;
+    box-shadow: 0 9px 25px #e53935cc !important;
+    cursor: default;
+    transform: none !important;
+  }
+
+  .quiz-feedback {
+    margin-top: 1.3rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--color-accent);
+    min-height: 1.6rem;
+    user-select: none;
+    transition: color 0.25s ease;
+  }
+
+  #next-question-btn {
+    margin: 1.6rem auto 0;
+    display: none;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.65rem 2.3rem;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 9px 22px rgba(255, 111, 145, 0.8);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+    user-select: none;
+    display: block;
+  }
+
+  #next-question-btn:hover {
+    background: #e05271;
+    box-shadow: 0 12px 30px rgba(224, 82, 113, 0.9);
+    transform: scale(1.05);
+  }
+
+  #quiz-score {
+    margin-top: 2rem;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--color-accent);
+    user-select: none;
+  }
+
+  footer {
+    padding: 1rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    text-shadow: 0 0 5px var(--color-accent);
+  }
+
+  @media (max-width: 720px) {
+    .alphabets-grid {
+      justify-content: center;
+    }
+
+    .vocab-grid {
+      grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+    }
+
+    .quiz-options {
+      grid-template-columns: 1fr;
+    }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  Belajar Bahasa Arab - E-Learning
+</header>
+<main>
+  <nav aria-label="Navigasi pelajaran">
+    <button class="tab-btn active" data-tab="alphabets" aria-controls="alphabets" aria-selected="true" role="tab">Huruf Arab</button>
+    <button class="tab-btn" data-tab="vocab" aria-controls="vocab" aria-selected="false" role="tab">Kosakata</button>
+    <button class="tab-btn" data-tab="quiz" aria-controls="quiz" aria-selected="false" role="tab">Kuis</button>
+  </nav>
+
+  <section id="alphabets" class="lesson active" role="tabpanel" tabindex="0" aria-labelledby="tab-alphabets">
+    <h2 style="text-align:center; margin-bottom: 1.8rem; color: var(--color-accent); user-select:none;">Huruf Arab (Arab Letters)</h2>
+    <div class="alphabets-grid" id="alphabet-container">
+      <!-- Alphabet cards inserted here -->
+    </div>
+  </section>
+
+  <section id="vocab" class="lesson" role="tabpanel" tabindex="0" aria-labelledby="tab-vocab">
+    <h2 style="text-align:center; margin-bottom: 1.8rem; color: var(--color-accent); user-select:none;">Kosakata Bahasa Arab (Vocabulary)</h2>
+    <div class="vocab-grid" id="vocab-list">
+      <!-- Vocabulary cards inserted here -->
+    </div>
+  </section>
+
+  <section id="quiz" class="lesson" role="tabpanel" tabindex="0" aria-labelledby="tab-quiz">
+    <h2 style="text-align:center; margin-bottom: 1.8rem; color: var(--color-accent); user-select:none;">Kuis: Tes Pengetahuanmu</h2>
+    <div id="quiz-container">
+      <p class="quiz-question" id="quiz-question" aria-live="polite"></p>
+      <ul class="quiz-options" id="quiz-options" role="listbox" aria-label="Pilihan Jawaban"></ul>
+      <div class="quiz-feedback" id="quiz-feedback" aria-live="assertive"></div>
+      <button id="next-question-btn" aria-label="Soal Selanjutnya">Soal Selanjutnya</button>
+      <div id="quiz-score"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2024 Belajar Bahasa Arab
+</footer>
+
+<script>
+  const alphabets = [
+    { letter: 'ا', name: 'Alif' },
+    { letter: 'ب', name: 'Ba' },
+    { letter: 'ت', name: 'Ta' },
+    { letter: 'ث', name: 'Tsa' },
+    { letter: 'ج', name: 'Jim' },
+    { letter: 'ح', name: 'Ha' },
+    { letter: 'خ', name: 'Kha' },
+    { letter: 'د', name: 'Dal' },
+    { letter: 'ذ', name: 'Dzhal' },
+    { letter: 'ر', name: 'Ra' },
+    { letter: 'ز', name: 'Zay' },
+    { letter: 'س', name: 'Sin' },
+    { letter: 'ش', name: 'Syin' },
+    { letter: 'ص', name: 'Shad' },
+    { letter: 'ض', name: 'Dhad' },
+    { letter: 'ط', name: 'Tha' },
+    { letter: 'ظ', name: 'Dha' },
+    { letter: 'ع', name: 'Ain' },
+    { letter: 'غ', name: 'Ghain' },
+    { letter: 'ف', name: 'Fa' },
+    { letter: 'ق', name: 'Qaf' },
+    { letter: 'ك', name: 'Kaf' },
+    { letter: 'ل', name: 'Lam' },
+    { letter: 'م', name: 'Mim' },
+    { letter: 'ن', name: 'Nun' },
+    { letter: 'ه', name: 'Ha' },
+    { letter: 'و', name: 'Waw' },
+    { letter: 'ي', name: 'Ya' }
+  ];
+
+  const vocabulary = [
+    {arabic: 'كتاب', translation: 'Buku'},
+    {arabic: 'قلم', translation: 'Pulpen'},
+    {arabic: 'باب', translation: 'Pintu'},
+    {arabic: 'شمس', translation: 'Matahari'},
+    {arabic: 'قمر', translation: 'Bulan'},
+    {arabic: 'مدرسة', translation: 'Sekolah'},
+    {arabic: 'سيارة', translation: 'Mobil'},
+    {arabic: 'مدينة', translation: 'Kota'},
+    {arabic: 'ماء', translation: 'Air'},
+    {arabic: 'بيت', translation: 'Rumah'}
+  ];
+
+  const quizQuestions = [
+    {
+      question: "Apa huruf ini? 'ب'",
+      options: ['Ba', 'Alif', 'Ya', 'Dal'],
+      answer: 'Ba'
+    },
+    {
+      question: "Apa arti kosakata 'كتاب'?",
+      options: ['Rumah', 'Buku', 'Mobil', 'Sekolah'],
+      answer: 'Buku'
+    },
+    {
+      question: "Apa arti kosakata 'شمس'?",
+      options: ['Matahari', 'Bulan', 'Air', 'Kota'],
+      answer: 'Matahari'
+    },
+    {
+      question: "Huruf Arab untuk 'Ya' adalah?",
+      options: ['ي', 'و', 'ه', 'ن'],
+      answer: 'ي'
+    },
+    {
+      question: "Apa arti kosakata 'مدينة'?",
+      options: ['Kota', 'Sekolah', 'Air', 'Pintu'],
+      answer: 'Kota'
+    }
+  ];
+
+  // Populate alphabets as cards
+  const alphabetContainer = document.getElementById('alphabet-container');
+  alphabets.forEach(({letter, name}) => {
+    const card = document.createElement('div');
+    card.className = 'letter-card';
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', name + ' letter');
+    card.innerHTML = `
+      <div class="arabic-letter">${letter}</div>
+      <div class="letter-name">${name}</div>
+    `;
+    alphabetContainer.appendChild(card);
+  });
+
+  // Populate vocabulary cards
+  const vocabList = document.getElementById('vocab-list');
+  vocabulary.forEach(({arabic, translation}) => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', arabic + ', artinya ' + translation);
+    card.innerHTML = `
+      <div class="vocab-arabic">${arabic}</div>
+      <div class="vocab-translation">${translation}</div>
+    `;
+    vocabList.appendChild(card);
+  });
+
+  // Tab navigation
+  const tabButtons = document.querySelectorAll('nav button.tab-btn');
+  const lessons = document.querySelectorAll('section.lesson');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      lessons.forEach(sec => sec.classList.remove('active'));
+
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const tab = btn.getAttribute('data-tab');
+      document.getElementById(tab).classList.add('active');
+      document.getElementById(tab).focus();
+
+      if (tab === 'quiz') {
+        startQuiz();
+      } else {
+        clearQuizUI();
+      }
+    });
+  });
+
+  // Quiz logic
+  let currentQuestionIndex = 0;
+  let score = 0;
+  const quizQuestionEl = document.getElementById('quiz-question');
+  const quizOptionsEl = document.getElementById('quiz-options');
+  const quizFeedbackEl = document.getElementById('quiz-feedback');
+  const nextQuestionBtn = document.getElementById('next-question-btn');
+  const quizScoreEl = document.getElementById('quiz-score');
+
+  nextQuestionBtn.addEventListener('click', () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizQuestions.length) {
+      showQuestion(currentQuestionIndex);
+      nextQuestionBtn.style.display = 'none';
+      quizFeedbackEl.textContent = '';
+      quizScoreEl.textContent = '';
+    } else {
+      quizQuestionEl.textContent = 'Kuis selesai!';
+      quizOptionsEl.innerHTML = '';
+      quizFeedbackEl.textContent = `Skor Anda: ${score} dari ${quizQuestions.length}`;
+      nextQuestionBtn.style.display = 'none';
+      quizScoreEl.textContent = '';
+    }
+  });
+
+  function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    quizScoreEl.textContent = '';
+    quizFeedbackEl.textContent = '';
+    nextQuestionBtn.style.display = 'none';
+    showQuestion(currentQuestionIndex);
+  }
+
+  function clearQuizUI() {
+    quizQuestionEl.textContent = '';
+    quizOptionsEl.innerHTML = '';
+    quizFeedbackEl.textContent = '';
+    nextQuestionBtn.style.display = 'none';
+    quizScoreEl.textContent = '';
+  }
+
+  function showQuestion(index) {
+    const q = quizQuestions[index];
+    quizQuestionEl.textContent = q.question;
+    quizOptionsEl.innerHTML = '';
+    q.options.forEach(option => {
+      const li = document.createElement('li');
+      li.textContent = option;
+      li.tabIndex = 0;
+      li.setAttribute('role', 'option');
+      li.addEventListener('click', () => selectAnswer(li, q.answer));
+      li.addEventListener('keypress', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          selectAnswer(li, q.answer);
+        }
+      });
+      quizOptionsEl.appendChild(li);
+    });
+  }
+
+  function selectAnswer(selectedLi, correctAnswer) {
+    const items = quizOptionsEl.querySelectorAll('li');
+    // Disable all options
+    items.forEach(item => {
+      item.style.pointerEvents = 'none';
+      if (item.textContent === correctAnswer) {
+        item.classList.add('correct');
+      }
+    });
+    if (selectedLi.textContent === correctAnswer) {
+      quizFeedbackEl.style.color = '#4caf50';
+      quizFeedbackEl.textContent = 'Jawaban benar! 👍';
+      score++;
+    } else {
+      selectedLi.classList.add('incorrect');
+      quizFeedbackEl.style.color = '#e53935';
+      quizFeedbackEl.textContent = 'Jawaban salah. 😞';
+    }
+    nextQuestionBtn.style.display = 'block';
+  }
+</script>
+</body>
+</html>
+
